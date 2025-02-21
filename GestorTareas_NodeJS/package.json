@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "chalk": "^5.4.1"
+  },
+  "name": "gestortareas_nodejs",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Gestor de Tareas",
+  "main": "script.js",
+  "devDependencies": {},
+  "scripts": {
+    "start": "node script.js",
+    "test": "echo \"Error: no test specified\" && exit 0"
+  },
+  "author": "samira",
+  "license": "ISC"
+}
