@@ -1,0 +1,107 @@
+body {
+    font-family: 'Arial', sans-serif;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #FFF0F5; 
+}
+
+h1 {
+    color: #DB7093;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.form-container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(219, 112, 147, 0.2); 
+    border: 1px solid #FFC0CB;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #C71585; 
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #FFB6C1; 
+    border-radius: 12px;
+    box-sizing: border-box;
+    font-size: 16px;
+    background-color: #FFF9FA; 
+    transition: all 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+    border-color: #DB7093; 
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(193, 34, 84, 0.87);
+}
+
+button {
+    background-color: #DB7093; 
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 15px; 
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    width: 100%;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #C71585; 
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+.confirmation-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(219, 112, 147, 0.3);
+    border: 2px solid #FFB6C1;
+    z-index: 1000;
+    text-align: center;
+    max-width: 80%;
+}
+
+.confirmation-message h3 {
+    color: #C71585;
+    margin-top: 0;
+}
+
+.confirmation-message button {
+    background: #DB7093;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 12px;
+    margin-top: 15px;
+    cursor: pointer;
+    width: auto;
+}
