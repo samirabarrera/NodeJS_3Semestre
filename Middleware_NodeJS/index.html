@@ -8,7 +8,7 @@
 </head>
 <body>
     <body>
-        <div class="form-container">
+        <div class="container">
             <h1>Formulario de Solicitud</h1>
             <form id="solicitudForm">
                 <div class="form-group">
@@ -24,16 +24,16 @@
                 <div class="form-group">
                     <label for="tipoSolicitud">Tipo de solicitud:</label>
                     <select id="tipoSolicitud" name="tipoSolicitud" required>
-                        <option value="">-- Seleccione una opción --</option>
+                        <option value="dropdownMenu">-- Seleccione una opción --</option>
                         <option value="VIP">VIP</option>
                         <option value="Prioritarios">Prioritaria</option>
                         <option value="General">General</option>
                     </select>
                 </div>
                 
-                <button type="submit">Enviar Solicitud</button>
+                <button type="submit" onclick()="enviarSolicitud">Enviar Solicitud</button>
             </form>
         </div>
-    
+<script src="./middleware_nodejs.js"></script>
 </body>
 </html>
