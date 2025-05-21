@@ -1,28 +1,20 @@
-import express, { json } from 'express';
+import express from 'express';
 import bodyParser from 'body-parser'
 
 const app = express();
 const port = 3000;
-app.listen(port, () => {
-    console.log(`Server is running port ${port}`);
-})
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-
-/*app.get('/', (req, res, next)=> {
-    console.log("Estoy en el Endpoint raiz")
-    res.json({message: "Welcome to the API"});
-})*/
 
 //VIP = 1, Prioritario = 2, General = 3
 const tipo = [ 1, 2, 3 ]
 
 const middlewareType = (req, res, next) => {
     const { tipo, edad, nombre } = req.params;
-    const palabraClave = req.headers.palabraClave;
+    const palabraClave = req.headers["palabraClave"];
 
-    if(tipo == 1 && req.headers.palabraClave == "VIP123") {
+    if(req.headers ["palabraClave"] === "VIP123") {
         next();
     } 
     if (tipo == 2 && req.edad > 60) {
@@ -39,9 +31,7 @@ const crearTurno = (req, res, next) => {
     console.log(`Creando turno para ${nombre}, tipo ${tipo}, edad ${edad}`);
     res.status(201).json({ message: `Turno creado para ${nombre}` });
 }
-
 app.post('/turnos/:tipo/:edad/:nombre', middlewareType, crearTurno);
-
 
 //Crear Enpoint de /atender
 //Crear arrays 
@@ -49,17 +39,33 @@ const vipArray = [];
 const priorityArray = [];
 const generalArray = [];
 
+const buscarTurno = () => {
+    const tipoTurno = req.params.body;
 
-const buscarArrayVIP = () => {
-    const tipo = req.params.tipo;
-
-    if (vipArray.length > 0) return vipArray;
-    if (priorityArray.length > 0) return priorityArray;
-    if (generalArray.length > 0) return generalArray;
+    if (vipArray.length > 0){
+        tipoTurno = vipArray.shift();
+        res.send('Atendiendo turno VIP')
+        console.log('Turno VIP')
+    } else if (priorityArray.length > 0) {
+        tipoTurno = priorityArray.shift();
+        res.send('Atendiendo turno prioritario')
+        console.log('Turno prioritario')
+    } else if (generalArray.length > 0) {
+        tipoTurno = generalArray.shift();
+        res.send('Atendiendo turno general')
+        console.log('Turno general')
+    } else {
+        res.send('No hay turnos')
+        console.log('No hay turnos en espera')
+    }
 };
 
 const validarTurno = (req, res) => {
-    const { turno } = req;
-    res.json ({message: `Atendiendo el turno de ${turno.nombre}, edad: ${turno.edad}, turno: ${turno.turno}`})
+    const { tipoTurno } = req;
+    res.json ({message: `Atendiendo el turno de ${turno.nombre}, edad: ${turno.edad}, turno: ${turno.tipoTurno}`})
 }
-app.get('/atender/:tipo/', buscarArrayVIP, validarTurno)
+app.get('/atender/:tipo/', buscarTurno, validarTurno)
+
+app.listen(port, () => {
+    console.log(`Server is running port ${port}`);
+})
