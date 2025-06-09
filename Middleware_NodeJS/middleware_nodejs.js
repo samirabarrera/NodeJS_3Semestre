@@ -8,63 +8,79 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 
 //VIP = 1, Prioritario = 2, General = 3
-const tipo = [ 1, 2, 3 ]
-
-const middlewareType = (req, res, next) => {
-    const { tipo, edad, nombre } = req.params;
-    const palabraClave = req.headers["palabraClave"];
-
-    if(req.headers ["palabraClave"] === "VIP123") {
-        next();
-    } 
-    if (tipo == 2 && req.edad > 60) {
-        next ();
-    }
-    if (tipo == 3) {
-    }
-    res.status(400).json({ error: "El turno no cumple con los requisitos. Intenta de nuevo" });
+const Tipos = {
+    VIP: 1,
+    PRIORITARIO: 2,
+    GENERAL: 3
 }
 
-//Crear Endpoint de /turno
-const crearTurno = (req, res, next) => {
-    const { tipo, edad, nombre } = req.params;
-    console.log(`Creando turno para ${nombre}, tipo ${tipo}, edad ${edad}`);
-    res.status(201).json({ message: `Turno creado para ${nombre}` });
-}
-app.post('/turnos/:tipo/:edad/:nombre', middlewareType, crearTurno);
-
-//Crear Enpoint de /atender
 //Crear arrays 
 const vipArray = [];
 const priorityArray = [];
 const generalArray = [];
 
-const buscarTurno = () => {
-    const tipoTurno = req.params.body;
+const isValidRequest = (req) => {
+    const palabraClave = req.headers["palabraClave"];
+    const {tipo, edad} = req.params;
+    const tipoInt = parseInt(tipo)
+    return tipoInt == Tipos.VIP && palabraClave === "VIP123" ||
+    (tipoInt == Tipos.PRIORITARIO && edad > 60) ||
+    (Tipos.GENERAL)
+}
 
+const middlewareType = (req, res, next) => {
+  if (!isValidRequest(req))
+    return res.status(400).json({
+      error: "El turno no cumple con los requisitos. Intenta de nuevo"
+    });
+
+  next();
+}
+
+//Crear Endpoint de /turno
+const crearTurno = (req, res) => {
+    const { tipo, edad, nombre } = req.params;
+    console.log(`Creando turno para ${nombre}, tipo ${tipo}, edad ${edad}`);
+
+    const tipoParam = parseInt(tipo)
+
+// Se debe agregar el turno a la cola (arreglo) correspondiente:
+if (tipoParam === Tipos.GENERAL) generalArray.push({nombre,tipo,edad})
+    else if (tipoParam === Tipos.PRIORITARIO) priorityArray.push({nombre,tipo,edad})
+    else if (tipoParam === Tipos.VIP) vipArray.push({nombre,tipo,edad})
+
+    console.log("ordenes agendadas: ",Tipos.VIP);
+    console.log(generalArray);
+    console.log(priorityArray);
+    console.log(vipArray);
+
+    res.status(201).json({ message: `Turno creado para ${nombre}` });
+}
+
+app.post('/turno/:tipo/:edad/:nombre', middlewareType, crearTurno);
+
+//Crear Enpoint de /atender
+const buscarTurno = (req,res) => {
     if (vipArray.length > 0){
-        tipoTurno = vipArray.shift();
-        res.send('Atendiendo turno VIP')
-        console.log('Turno VIP')
+        console.log('Turno VIP ')
+        const turnoVip = vipArray.shift();
+        res.send(`Atendiendo turno VIP: ${turnoVip.nombre}`)
     } else if (priorityArray.length > 0) {
-        tipoTurno = priorityArray.shift();
-        res.send('Atendiendo turno prioritario')
         console.log('Turno prioritario')
+        const turnoPriority = priorityArray.shift();
+        priorityArray.shift();
+        res.send(`Atendiendo turno prioritario: ${turnoPriority.nombre}`)
     } else if (generalArray.length > 0) {
-        tipoTurno = generalArray.shift();
-        res.send('Atendiendo turno general')
         console.log('Turno general')
+        const turnoGeneral = generalArray.shift();
+        generalArray.shift();
+        res.send(`Atendiendo turno General: ${turnoGeneral.nombre}`)
     } else {
         res.send('No hay turnos')
-        console.log('No hay turnos en espera')
     }
 };
 
-const validarTurno = (req, res) => {
-    const { tipoTurno } = req;
-    res.json ({message: `Atendiendo el turno de ${turno.nombre}, edad: ${turno.edad}, turno: ${turno.tipoTurno}`})
-}
-app.get('/atender/:tipo/', buscarTurno, validarTurno)
+app.get('/atender', buscarTurno, middlewareType)
 
 app.listen(port, () => {
     console.log(`Server is running port ${port}`);
