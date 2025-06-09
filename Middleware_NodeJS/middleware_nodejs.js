@@ -6,7 +6,6 @@ const port = 3000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-
 //VIP = 1, Prioritario = 2, General = 3
 const Tipos = {
     VIP: 1,
